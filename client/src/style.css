@@ -25,14 +25,25 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+h2 {
+  font-size: 2.4em;
+  line-height: 1.2;
+  text-align: center;
+}
+
+h3 {
+  text-align: center;
 }
 
 button {
@@ -52,6 +63,41 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+.dialog {
+  z-index: 10;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f1f1f1;
+  padding: 2em;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+}
+
+.main-container {
+  display: flex;
+}
+
+.header {
+  margin-bottom: 1em;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 3em;
+}
+
+.player-name {
+  margin: 0.25em 1em;
 }
 
 @media (prefers-color-scheme: light) {

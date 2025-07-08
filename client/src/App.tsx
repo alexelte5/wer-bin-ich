@@ -27,9 +27,14 @@ function App() {
 			setPlayers((prev) => prev.filter((p) => p.id !== id));
 		});
 
+		socket.on("update-users", (updatedPlayers: Player[]) => {
+			setPlayers(updatedPlayers);
+		});
+
 		return () => {
 			socket.off("user-joined");
 			socket.off("user-left");
+			socket.off("update-users");
 		};
 	}, []);
 
@@ -43,7 +48,7 @@ function App() {
 	const endGame = () => setPhase("end");
 
 	return (
-		<div>
+		<div className="main-container">
 			{phase === "login" && (
 				<Login
 					name={name}
