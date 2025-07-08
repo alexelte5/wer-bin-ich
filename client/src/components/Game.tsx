@@ -8,7 +8,7 @@ type GameProps = {
 
 const Game: React.FC<GameProps> = ({ players, endGame }) => {
   return (
-    <div>
+    <>
       <h2>Game</h2>
       <ul>
         {players.map((p) => (
@@ -16,7 +16,7 @@ const Game: React.FC<GameProps> = ({ players, endGame }) => {
         ))}
       </ul>
       <button onClick={endGame}>Spiel beenden</button>
-    </div>
+    </>
   )
 }
 

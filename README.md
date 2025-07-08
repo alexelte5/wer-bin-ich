@@ -23,6 +23,5 @@ Wort-vergabe festlegen
 
 
 ### TODO
-Cookies implementieren
-Cookies löschen implementieren
 Einstellungen fertig machen
+Assigning-Words

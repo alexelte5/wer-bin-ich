@@ -1,7 +1,6 @@
 import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import path from 'path';
 
 const app = express();
 const httpServer = createServer(app);
@@ -18,25 +17,70 @@ type User = {
   word?: string;
 }
 
+type Phase = "login" | "lobby" | "assigning" | "game" | "end";
+
 let users: User[] = [];
+let phase: Phase = "login";
+
+function broadcastState() {
+  io.emit('sync-state', { phase, players: users });
+}
 
 io.on('connection', (socket) => {
-  console.log('🔌 Neue Verbindung:', socket.id);
+  console.log("Neue Verbindung");
 
-  socket.on('set-name', (name: string) => {
-    console.log(`${socket.id} heißt jetzt ${name}`);
-    const user = { id: socket.id, name };
+  socket.on("set-name", (name: string) => {
+    const user: User = { id: socket.id, name };
     users.push(user);
-    io.emit('update-users', users);
+    phase = "lobby";
+    broadcastState();
   });
 
-  socket.on('disconnect', () => {
-    let user = users.filter(user => user.id !== socket.id)[0];
-    if (user) {
-      users = users.filter(user => user.id !== socket.id);
-      console.log('❌ Verbindung getrennt:', user.name);
-      io.emit('update-users', users);
+  socket.on("rejoin", (name: string) => {
+    let exisitingUser = users.find(user => user.name === name);
+    if (!exisitingUser) {
+      users.push({ id: socket.id, name });
+    } else  {
+      exisitingUser.id = socket.id;
     }
+    broadcastState();
+  });
+
+  socket.on("start-game", () => {
+    phase = "assigning";
+    users.forEach(user => {
+      delete user.word;
+    })
+    broadcastState();
+  });
+
+  socket.on("assign-words", ({targetId, word}) => {
+    const target = users.find(user => user.id === targetId);
+    if (target) target.word = word;
+    broadcastState();
+    const allHaveWords = users.every(user => user.word);
+    if (allHaveWords) {
+      phase = "game";
+      broadcastState();
+    }
+  });
+
+  socket.on("end-game", () => {
+    phase = "end";
+    broadcastState();
+  });
+
+  socket.on("to-lobby", () => {
+    phase = "lobby";
+    users.forEach(user => {
+      delete user.word;
+    });
+    broadcastState();
+  });
+
+  socket.on("disconnect", () => {
+    users = users.filter(user => user.id !== socket.id);
+    broadcastState();
   });
 });
 

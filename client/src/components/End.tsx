@@ -1,14 +1,14 @@
 import React from 'react'
 
 type EndProps = {
-    startGame: () => void;
+    toLobby: () => void;
 }
 
-const end: React.FC<EndProps> = ({ startGame }) => {
+const end: React.FC<EndProps> = ({ toLobby }) => {
   return (
     <div>
       <h2>End</h2>
-      <button onClick={startGame}>Spiel starten</button>
+      <button onClick={toLobby}>Zurück zur Lobby</button>
     </div>
   )
 }

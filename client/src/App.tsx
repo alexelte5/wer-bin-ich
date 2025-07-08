@@ -2,13 +2,14 @@
 import { useState, useEffect } from "react";
 import { io, Socket } from "socket.io-client";
 import type { Player } from "../types";
+import AssignWord from "./components/AssignWord";
 import Login from "./components/Login";
 import Lobby from "./components/Lobby";
 import Game from "./components/Game";
 import End from "./components/End";
 
 // Typen
-type Phase = "login" | "lobby" | "game" | "end";
+type Phase = "login" | "lobby" | "assigning" | "game" | "end";
 
 // Socket verbinden
 const socket: Socket = io("http://localhost:3000");
@@ -19,33 +20,38 @@ function App() {
 	const [players, setPlayers] = useState<Player[]>([]);
 
 	useEffect(() => {
-		socket.on("user-joined", (player: Player) => {
-			setPlayers((prev) => [...prev, player]);
+		const savedName = localStorage.getItem("username");
+
+		socket.on("connect", () => {
+			if (savedName) {
+				socket.emit("rejoin", savedName);
+			} else {
+				setPhase("login");
+			}
 		});
 
-		socket.on("user-left", (id: string) => {
-			setPlayers((prev) => prev.filter((p) => p.id !== id));
-		});
-
-		socket.on("update-users", (updatedPlayers: Player[]) => {
-			setPlayers(updatedPlayers);
+		socket.on("sync-state", ({ phase, players }: { phase: Phase; players: Player[] }) => {
+			setName(savedName || "");
+			setPlayers(players);
+			setPhase(phase);
 		});
 
 		return () => {
-			socket.off("user-joined");
-			socket.off("user-left");
-			socket.off("update-users");
+			socket.off("connect");
+			socket.off("sync-state");
 		};
 	}, []);
 
 	const handleLogin = () => {
 		if (!name.trim()) return;
+
+		localStorage.setItem("username", name);
 		socket.emit("set-name", name);
-		setPhase("lobby");
 	};
 
-	const startGame = () => setPhase("game");
-	const endGame = () => setPhase("end");
+	const startGame = () => socket.emit("start-game");
+	const endGame = () => socket.emit("end-game");
+	const toLobby = () => socket.emit("to-lobby");
 
 	return (
 		<div className="wrapper">
@@ -61,9 +67,13 @@ function App() {
 				<Lobby players={players} startGame={startGame} />
 			)}
 
+			{phase === "assigning" && (
+				<AssignWord />
+			)}
+
 			{phase === "game" && <Game players={players} endGame={endGame} />}
 
-			{phase === "end" && <End startGame={startGame} />}
+			{phase === "end" && <End toLobby={toLobby} />}
 		</div>
 	);
 }
