@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 type LoginProps = {
   name: string;
@@ -8,16 +8,20 @@ type LoginProps = {
 
 const Login: React.FC<LoginProps> = ({ name, setName, handleLogin }) => {
   return (
-    <div>
-      <h1>Wer bin ich?</h1>
-      <input
-        type="text"
-        value={name}
-        onChange={e => setName(e.target.value)}
-        placeholder="Dein Name"
-      />
-      <button onClick={handleLogin}>Beitreten</button>
-    </div>
+    <>
+      <div className="top-center">
+      </div>
+      <div className="main-wrapper">
+        <h1 className='header'>Login</h1>
+        <input
+          type="text"
+          value={name}
+          onChange={e => setName(e.target.value)}
+          placeholder="Dein Name"
+        />
+        <button onClick={handleLogin}>Beitreten</button>
+      </div>
+    </>
   );
 };
 

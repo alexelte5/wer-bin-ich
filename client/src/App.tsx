@@ -48,7 +48,7 @@ function App() {
 	const endGame = () => setPhase("end");
 
 	return (
-		<div className="main-container">
+		<div className="wrapper">
 			{phase === "login" && (
 				<Login
 					name={name}
