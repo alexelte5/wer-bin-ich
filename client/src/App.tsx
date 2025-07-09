@@ -10,7 +10,7 @@ import Login from "./components/Login";
 
 // Typen
 type ClientPhase = "login" | "lobby";
-type ServerPhase = "lobby" |"assigning" | "game" | "end";
+type ServerPhase = "assigning" | "game" | "end";
 
 // Socket verbinden
 const socket: Socket = io("http://localhost:3000");
@@ -73,7 +73,7 @@ function App() {
 				/>
 			)}
 
-			{clientPhase === "lobby" && serverPhase === "lobby" && (
+			{clientPhase === "lobby" && serverPhase === null && (
 				<Lobby players={players} startGame={startGame} toggled={toggled} setToggled={setToggled} />
 			)}
 

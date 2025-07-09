@@ -1,6 +1,7 @@
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import type { Player } from "../client/types";
 
 const app = express();
 const httpServer = createServer(app);
@@ -11,18 +12,29 @@ const io = new Server(httpServer, {
   },
 });
 
-type User = {
-  id: string;
-  name: string;
-  word?: string;
-  targetId?: string;
-  targetName?: string;
-};
+type Phase = "assigning" | "game" | "end" | null;
 
-type Phase = "login" | "lobby" | "assigning" | "game" | "end";
+let users: Player[] = [];
+let phase: Phase = null;
 
-let users: User[] = [];
-let phase: Phase = "login";
+function randomAssignment() {
+  const shuffled = [...users];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  for (let i = 0; i < shuffled.length; i++) {
+    const giver = shuffled[i];
+    const receiver = shuffled[(i + 1) % shuffled.length];
+    giver.targetId = receiver.id;
+    giver.targetName = receiver.name;
+  }
+}
+
+function customAssignment() {
+  return;
+}
 
 function broadcastState() {
   io.emit("sync-state", { phase, players: users });
@@ -32,7 +44,7 @@ io.on("connection", (socket) => {
   console.log("Neue Verbindung");
 
   socket.on("set-name", (name: string) => {
-    const user: User = { id: socket.id, name };
+    const user: Player = { id: socket.id, name };
     users.push(user);
     broadcastState();
   });
@@ -54,18 +66,11 @@ io.on("connection", (socket) => {
     users.forEach((user) => {
       delete user.word;
     });
-
-    const shuffled = [...users];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    if (toggled === "random") {
+      randomAssignment();
     }
-
-    for (let i = 0; i < shuffled.length; i++) {
-      const giver = shuffled[i];
-      const receiver = shuffled[(i + 1) % shuffled.length];
-      giver.targetId = receiver.id;
-      giver.targetName = receiver.name;
+    if (toggled === "custom") {
+      customAssignment();
     }
 
     console.log(
@@ -92,7 +97,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("to-lobby", () => {
-    phase = "lobby";
+    phase = null;
     users.forEach((user) => {
       delete user.word;
     });

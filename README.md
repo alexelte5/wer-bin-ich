@@ -23,6 +23,4 @@ Wort-vergabe festlegen
 
 
 ### TODO
-Phasen-Management ist buggy -> Ein Spieler loggt sich ein, alle werden eingeloggt etc.
-    maybe hier einmal alles neu schreiben -> sockets komplett neu machen
-Assigning-Words
+Assigning-Words & Spieler richtig anzeigen beim words-assignen
