@@ -9,46 +9,54 @@ import Lobby from "./components/Lobby";
 import Login from "./components/Login";
 
 // Typen
-type Phase = "login" | "lobby" | "assigning" | "game" | "end";
+type ClientPhase = "login" | "lobby";
+type ServerPhase = "lobby" |"assigning" | "game" | "end";
 
 // Socket verbinden
 const socket: Socket = io("http://localhost:3000");
 
 function App() {
-	const [phase, setPhase] = useState<Phase>("login");
+	const [clientPhase, setClientPhase] = useState<ClientPhase>("login");
+	const [serverPhase, setServerPhase] = useState<ServerPhase | null>(null);
 	const [name, setName] = useState("");
 	const [players, setPlayers] = useState<Player[]>([]);
 	const [toggled, setToggled] = useState(false);
-	let savedName: string | null = null;
+	const [savedName, setSavedName] = useState<string | null>(() => localStorage.getItem("username"));
 
 	useEffect(() => {
-		savedName = localStorage.getItem("username");
 
 		socket.on("connect", () => {
 			if (savedName) {
 				socket.emit("rejoin", savedName);
+				setClientPhase("lobby")
 			} else {
-				setPhase("login");
+				setClientPhase("login");
 			}
 		});
 
-		socket.on("sync-state", ({ phase, players }: { phase: Phase; players: Player[] }) => {
+		socket.on("sync-state", ({ phase, players }: { phase: ServerPhase; players: Player[] }) => {
 			setName(savedName || "");
 			setPlayers(players);
-			setPhase(phase);
+			setServerPhase(phase);
+
+			if (phase === null && savedName) {
+				setClientPhase("lobby");
+			}
 		});
 		
 		return () => {
 			socket.off("connect");
 			socket.off("sync-state");
 		};
-	}, []);
+	}, [savedName]);
 
 	const handleLogin = () => {
 		if (!name.trim()) return;
 
 		localStorage.setItem("username", name);
+		setSavedName(savedName);
 		socket.emit("set-name", name);
+		setClientPhase("lobby");
 	};
 
 	const startGame = () => socket.emit("start-game", toggled ? "random" : "custom");
@@ -57,7 +65,7 @@ function App() {
 
 	return (
 		<div className="wrapper">
-			{phase === "login" && (
+			{clientPhase === "login" && (
 				<Login
 					name={name}
 					setName={setName}
@@ -65,17 +73,17 @@ function App() {
 				/>
 			)}
 
-			{phase === "lobby" && (
+			{clientPhase === "lobby" && serverPhase === "lobby" && (
 				<Lobby players={players} startGame={startGame} toggled={toggled} setToggled={setToggled} />
 			)}
 
-			{phase === "assigning" && (
+			{serverPhase === "assigning" && (
 				<AssignWord players={players} username={savedName} />
 			)}
 
-			{phase === "game" && <Game players={players} endGame={endGame} />}
+			{serverPhase === "game" && <Game players={players} endGame={endGame} />}
 
-			{phase === "end" && <End toLobby={toLobby} />}
+			{serverPhase === "end" && <End toLobby={toLobby} />}
 		</div>
 	);
 }

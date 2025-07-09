@@ -34,7 +34,6 @@ io.on("connection", (socket) => {
   socket.on("set-name", (name: string) => {
     const user: User = { id: socket.id, name };
     users.push(user);
-    phase = "lobby";
     broadcastState();
   });
 
