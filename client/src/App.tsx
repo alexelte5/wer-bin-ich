@@ -1,12 +1,12 @@
 // client/src/App.tsx
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import type { Player } from "../types";
 import AssignWord from "./components/AssignWord";
-import Login from "./components/Login";
-import Lobby from "./components/Lobby";
-import Game from "./components/Game";
 import End from "./components/End";
+import Game from "./components/Game";
+import Lobby from "./components/Lobby";
+import Login from "./components/Login";
 
 // Typen
 type Phase = "login" | "lobby" | "assigning" | "game" | "end";
@@ -18,9 +18,11 @@ function App() {
 	const [phase, setPhase] = useState<Phase>("login");
 	const [name, setName] = useState("");
 	const [players, setPlayers] = useState<Player[]>([]);
+	const [toggled, setToggled] = useState(false);
+	let savedName: string | null = null;
 
 	useEffect(() => {
-		const savedName = localStorage.getItem("username");
+		savedName = localStorage.getItem("username");
 
 		socket.on("connect", () => {
 			if (savedName) {
@@ -35,7 +37,7 @@ function App() {
 			setPlayers(players);
 			setPhase(phase);
 		});
-
+		
 		return () => {
 			socket.off("connect");
 			socket.off("sync-state");
@@ -49,7 +51,7 @@ function App() {
 		socket.emit("set-name", name);
 	};
 
-	const startGame = () => socket.emit("start-game");
+	const startGame = () => socket.emit("start-game", toggled ? "random" : "custom");
 	const endGame = () => socket.emit("end-game");
 	const toLobby = () => socket.emit("to-lobby");
 
@@ -64,11 +66,11 @@ function App() {
 			)}
 
 			{phase === "lobby" && (
-				<Lobby players={players} startGame={startGame} />
+				<Lobby players={players} startGame={startGame} toggled={toggled} setToggled={setToggled} />
 			)}
 
 			{phase === "assigning" && (
-				<AssignWord />
+				<AssignWord players={players} username={savedName} />
 			)}
 
 			{phase === "game" && <Game players={players} endGame={endGame} />}

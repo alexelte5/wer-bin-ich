@@ -1,1 +1,1 @@
-export type Player = { id: string; name: string, word?: string };
+export type Player = { id: string; name: string, word?: string, targetId?: string, targetName?: string };

@@ -5,13 +5,20 @@ import Settings from "./dialogs/Settings";
 type LobbyProps = {
   players: Player[];
   startGame: () => void;
+  toggled: boolean;
+  setToggled: (toggled: boolean) => void;
 };
 
 function homepage() {
   window.location.href = 'https://kysfrfr.de';
 }
 
-const Lobby: React.FC<LobbyProps> = ({ players, startGame }) => {
+function signout() {
+  localStorage.removeItem('username');
+  window.location.reload();
+}
+
+const Lobby: React.FC<LobbyProps> = ({ players, startGame, toggled, setToggled }) => {
   const [showSettings, setShowSettings] = React.useState(false);
 
   return (
@@ -33,7 +40,7 @@ const Lobby: React.FC<LobbyProps> = ({ players, startGame }) => {
           )}
         </div>
         <button onClick={startGame} disabled={players.length <= 1} className={players.length <= 1 ? 'disabled' : ''}>Spiel starten</button>
-        {showSettings && <div className='dialog'><Settings onClose={() => setShowSettings(false)} /></div>}
+        {showSettings && <div className='dialog'><Settings onClose={() => setShowSettings(false)} signout={signout} toggled={toggled} setToggled={setToggled} /></div>}
       </div>
     </div>
   );

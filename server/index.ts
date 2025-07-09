@@ -1,21 +1,23 @@
-import express from 'express';
-import { createServer } from 'http';
-import { Server } from 'socket.io';
+import express from "express";
+import { createServer } from "http";
+import { Server } from "socket.io";
 
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: 'http://localhost:5173',
-    methods: ['GET', 'POST']
-  }
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+  },
 });
 
 type User = {
   id: string;
   name: string;
   word?: string;
-}
+  targetId?: string;
+  targetName?: string;
+};
 
 type Phase = "login" | "lobby" | "assigning" | "game" | "end";
 
@@ -23,10 +25,10 @@ let users: User[] = [];
 let phase: Phase = "login";
 
 function broadcastState() {
-  io.emit('sync-state', { phase, players: users });
+  io.emit("sync-state", { phase, players: users });
 }
 
-io.on('connection', (socket) => {
+io.on("connection", (socket) => {
   console.log("Neue Verbindung");
 
   socket.on("set-name", (name: string) => {
@@ -37,28 +39,48 @@ io.on('connection', (socket) => {
   });
 
   socket.on("rejoin", (name: string) => {
-    let exisitingUser = users.find(user => user.name === name);
+    let exisitingUser = users.find((user) => user.name === name);
     if (!exisitingUser) {
       users.push({ id: socket.id, name });
-    } else  {
+    } else {
       exisitingUser.id = socket.id;
     }
     broadcastState();
   });
 
-  socket.on("start-game", () => {
+  socket.on("start-game", (toggled) => {
+    console.log(toggled);
     phase = "assigning";
-    users.forEach(user => {
+
+    users.forEach((user) => {
       delete user.word;
-    })
+    });
+
+    const shuffled = [...users];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    for (let i = 0; i < shuffled.length; i++) {
+      const giver = shuffled[i];
+      const receiver = shuffled[(i + 1) % shuffled.length];
+      giver.targetId = receiver.id;
+      giver.targetName = receiver.name;
+    }
+
+    console.log(
+      "Zuweisungen:",
+      users.map((u) => `${u.name} ➝ ${u.targetName}`)
+    );
     broadcastState();
   });
 
-  socket.on("assign-words", ({targetId, word}) => {
-    const target = users.find(user => user.id === targetId);
+  socket.on("assign-words", ({ targetId, word }) => {
+    const target = users.find((user) => user.id === targetId);
     if (target) target.word = word;
     broadcastState();
-    const allHaveWords = users.every(user => user.word);
+    const allHaveWords = users.every((user) => user.word);
     if (allHaveWords) {
       phase = "game";
       broadcastState();
@@ -72,14 +94,14 @@ io.on('connection', (socket) => {
 
   socket.on("to-lobby", () => {
     phase = "lobby";
-    users.forEach(user => {
+    users.forEach((user) => {
       delete user.word;
     });
     broadcastState();
   });
 
   socket.on("disconnect", () => {
-    users = users.filter(user => user.id !== socket.id);
+    users = users.filter((user) => user.id !== socket.id);
     broadcastState();
   });
 });

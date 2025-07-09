@@ -23,5 +23,5 @@ Wort-vergabe festlegen
 
 
 ### TODO
-Einstellungen fertig machen
+Phasen-Management ist buggy -> Ein Spieler loggt sich ein, alle werden eingeloggt etc.
 Assigning-Words
