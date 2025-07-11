@@ -1,0 +1,201 @@
+:root {
+  --bg: #1e1e2f;
+  --surface: #1e1e1e;
+  --text: #ededed;
+  --text-muted: #aaaaaa;
+  --primary: #00c896;
+  --danger: #ff6b6b;
+  --admin: #4f46e5;
+  --border: #2c2c2c;
+  --hover: #3730a3;
+}
+
+html, body {
+  height: calc(var(--vh) * 100);
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+      background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", sans-serif;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: 2.4em;
+  line-height: 1.2;
+  text-align: center;
+}
+
+h3 {
+  text-align: center;
+}
+
+button {
+  padding: 1.5vh;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.5em;
+  background-color: var(--admin);
+  color: white;
+  cursor: pointer;
+  width: 10em;
+}
+
+button:hover {
+  border: 2px solid;
+}
+
+input {
+  border: 1px solid var(--border);
+  background-color: var(--surface);
+  color: var(--text);
+  width: 10em;
+  font-size: 1.5em;
+  padding: 1.5vh;
+  box-sizing: border-box;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: inherit;
+}
+
+.wrapper {
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+  background: var(--bg);
+}
+
+.upper-wrapper {
+  grid-column: 1 / 4;
+  grid-row: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 2rem 2rem 0 2rem;
+}
+
+.top-center {
+  grid-column: 2/3;
+  grid-row: 1;
+  text-align: center;
+}
+
+.main-wrapper {
+  grid-column: 2 / 3;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.disabled {
+  background-color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+button.disabled:hover {
+  border: none;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 3em;
+  height: 3em;
+}
+
+.dialog {
+  z-index: 10;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--surface);
+  padding: 2em;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+}
+
+.main-container {
+  display: flex;
+}
+
+.header {
+  text-align: center;
+  margin: 0;
+  margin-bottom: 2em;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 2em;
+}
+
+.player-name {
+  margin: 0.25em 1em;
+}
+
+.waiting {
+  color: var(--text-muted);
+  margin-bottom: -1em;
+}
+
+.toggle-btn {
+  background-color: var(--text-muted);
+  border: 1px solid;
+  border-radius: 99px;
+  width: 50px;
+  height: 28px;
+  transition: background-color 0.1s ease, border-color 0.2s ease;
+  cursor: pointer;
+  box-shadow: 1px 1px 1ßpx rgba(0, 0, 0, 0.748);
+  position: relative;
+}
+
+.toggle-btn .thumb {
+  height: 20px;
+  background-color: white;
+  width: 20px;
+  border-radius: 99px;
+  transform: translateX(0);
+  transition: left 0.15s ease;
+  position: absolute;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.toggle-btn.toggled {
+  background-color: #00c896;
+}
+
+.toggle-btn.toggled .thumb {
+  left: calc(50px - 25px);
+}

@@ -20,3 +20,10 @@ Zurück in die Lobby
 
 ## Einstellungen
 Wort-vergabe festlegen
+
+
+### TODO
+bugs: 
+    wenn sich einer anmeldet, werden die inputs bei allen anderen gecleared
+    wenn ingame, können spieler nachjoinen und alles ficken
+    ingame refresh crashed game
