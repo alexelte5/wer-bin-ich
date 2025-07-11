@@ -117,4 +117,7 @@ app.post("/deploy", (req: Request, res: Response) => {
 });
 
 const PORT = 5004;
-httpServer.listen(PORT);
+const IP = '0.0.0.0'
+httpServer.listen(PORT, IP, () => {
+	console.log("Server läuft")
+});
