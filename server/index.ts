@@ -8,7 +8,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
 	cors: {
-		origin: "http://whoami.kysfrfr.de",
+		origin: "https://whoami.kysfrfr.de",
 		methods: ["GET", "POST"],
 	},
 });
@@ -117,6 +117,4 @@ app.post("/deploy", (req: Request, res: Response) => {
 });
 
 const PORT = 5004;
-httpServer.listen(PORT, () => {
-	console.log(`🚀 Server läuft auf http://localhost:${PORT}`);
-});
+httpServer.listen(PORT);
