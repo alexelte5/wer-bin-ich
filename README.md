@@ -23,4 +23,7 @@ Wort-vergabe festlegen
 
 
 ### TODO
-Assigning-Words & Spieler richtig anzeigen beim words-assignen
+bugs: 
+    wenn sich einer anmeldet, werden die inputs bei allen anderen gecleared
+    wenn ingame, können spieler nachjoinen und alles ficken
+    ingame refresh crashed game
