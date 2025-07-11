@@ -1,4 +1,3 @@
-// client/src/App.tsx
 import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import type { Player } from "../types";
@@ -73,7 +72,6 @@ function App() {
 	};
 
 	const handleAssignWord = (targetId: string | undefined, word: string) => {
-		console.log(targetId, word);
 		socket.emit("assign-words", { targetId, word });
 	};
 

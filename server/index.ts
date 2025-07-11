@@ -8,7 +8,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
 	cors: {
-		origin: "http://localhost:5173",
+		origin: "http://whoami.kysfrfr.de",
 		methods: ["GET", "POST"],
 	},
 });
@@ -42,8 +42,6 @@ function broadcastState() {
 }
 
 io.on("connection", (socket) => {
-	console.log("Neue Verbindung");
-
 	socket.on("set-name", (name: string) => {
 		const user: Player = { id: socket.id, name };
 		users.push(user);
@@ -61,7 +59,6 @@ io.on("connection", (socket) => {
 	});
 
 	socket.on("start-game", (toggled) => {
-		console.log(toggled);
 		phase = "assigning";
 
 		users.forEach((user) => {
@@ -69,10 +66,6 @@ io.on("connection", (socket) => {
 		});
 		if (toggled === "random") {
 			randomAssignment();
-			console.log(
-				"Zuweisungen:",
-				users.map((u) => `${u.name} ➝ ${u.targetName}`)
-			);
 		}
 		if (toggled === "custom") {
 			customAssignment();
@@ -123,7 +116,7 @@ app.post("/deploy", (req: Request, res: Response) => {
 	res.status(400).send("No main branch push");
 });
 
-const PORT = 3000;
+const PORT = 5004;
 httpServer.listen(PORT, () => {
 	console.log(`🚀 Server läuft auf http://localhost:${PORT}`);
 });

@@ -17,10 +17,6 @@ const AssignWord: React.FC<AssignWordProps> = ({
 
 	const me = players.find((player) => player.name === username);
 	const target = players.find((player) => player.id === me?.targetId);
-	console.log(me);
-	console.log(target);
-	console.log(username);
-	console.log(players);
 	return (
 		<>
 			{assigned ? (
