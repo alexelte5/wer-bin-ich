@@ -1,14 +1,16 @@
 {
+  "private": true,
   "name": "wer-bin-ich",
   "version": "1.0.0",
   "description": "Eine kleine Webapp zum spielen von \"Wer bin ich?\"",
   "main": "index.js",
+  "workspaces": [
+    ".",
+    "client",
+    "server"
+  ],
   "scripts": {
-    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
-    "install:all": "npm-run-all --parallel install:root install:client install:server",
-    "install:root": "npm install",
-    "install:client": "cd client && npm install",
-    "install:server": "cd server && npm install"
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\""
   },
   "keywords": [],
   "author": "",
