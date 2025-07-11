@@ -1,7 +1,8 @@
-import express from "express";
+import { exec } from "child_process";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import type { Player } from "../client/types";
+import express, { Request, Response } from "express";
 
 const app = express();
 const httpServer = createServer(app);
@@ -107,6 +108,19 @@ io.on("connection", (socket) => {
 		users = users.filter((user) => user.id !== socket.id);
 		broadcastState();
 	});
+});
+
+app.post("/deploy", (req: Request, res: Response) => {
+	const data = req.body;
+	if (data && data.ref === "/refs/heads/main") {
+		exec('pkill -f "npm run dev"', (error, stdout, stderr) => {
+			if(error) console.error("Fehler beim Beenden: ", error.message);
+			if(stderr) console.error("Fehlerausgabe: ", stderr);
+			console.log("Beendet: ", stdout);
+		});
+		res.status(200).send("Deploy started");
+	}
+	res.status(400).send("No main branch push");
 });
 
 const PORT = 3000;
