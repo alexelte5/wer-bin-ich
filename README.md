@@ -23,6 +23,15 @@ Wort-vergabe festlegen
 
 
 ### TODO
+Assign-Words abbrechen/Wort-ändern
+"Erraten"-Button hinzufügen -> Zeigt das eigene Wort
+Timer im Endscreen einfügen
+
+styling:
+    Gamge-Page fehlt komplett
+    Settings
+    Endscreen
+
 bugs: 
     wenn sich einer anmeldet, werden die inputs bei allen anderen gecleared
     wenn ingame, können spieler nachjoinen und alles ficken

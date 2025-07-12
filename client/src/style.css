@@ -36,6 +36,7 @@ h2 {
 
 h3 {
   text-align: center;
+  margin: 0;
 }
 
 button {
@@ -78,7 +79,7 @@ input[type="number"] {
   width: 100vw;
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 25% 50% 25%;
   background: var(--bg);
 }
 
@@ -198,4 +199,28 @@ button.disabled:hover {
 
 .toggle-btn.toggled .thumb {
   left: calc(50px - 25px);
+}
+
+.target-name {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  font-size: 2.5em;
+  font-weight: 700;
+  text-align: center;
+}
+
+.assign-word {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.assigned-text {
+  text-align: center;
+  font-size: 2em;
+}
+
+.muted {
+  text-align: center;
+  color: var(--text-muted)
 }

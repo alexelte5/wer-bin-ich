@@ -19,32 +19,37 @@ const AssignWord: React.FC<AssignWordProps> = ({
 	const target = players.find((player) => player.id === me?.targetId);
 	return (
 		<>
-			{assigned ? (
-				<p>
-					Du hast <strong>{word}</strong> für{" "}
-					<strong>{target?.name}</strong> zugewiesen.
-				</p>
-			) : (
-				<div className="assign-word">
-					<h2>
-						Bestimme ein Wort für: <strong>{target?.name}</strong>
-					</h2>
-					<input
-						type="text"
-						placeholder="Wort eingeben"
-						value={word}
-						onChange={(e) => setWord(e.target.value)}
-					/>
-					<button
-						onClick={() => {
-							handleAssignWord(target?.id, word);
-							setAssigned(true);
-						}}
-					>
-						Bestätigen
-					</button>
-				</div>
-			)}
+			<div className="main-wrapper">
+				{assigned ? (
+					<div>
+						<p className="assigned-text">
+							<strong>{target?.name}</strong> hat das Wort: <strong>{word}</strong>
+							{/* <strong>Nina</strong> hat das Wort: <strong>Apfel</strong> */}
+						</p>
+						<p className="muted">Warte bis alle ein Wort zugewiesen haben</p>
+					</div>
+				) : (
+					<div className="assign-word">
+						<h2>Bestimme ein Wort für:</h2>
+						<p className="target-name">{target?.name}</p>
+						{/* <p className="target-name">Nina</p> */}
+						<input
+							type="text"
+							placeholder="Wort eingeben"
+							value={word}
+							onChange={(e) => setWord(e.target.value)}
+						/>
+						<button
+							onClick={() => {
+								handleAssignWord(target?.id, word);
+								setAssigned(true);
+							}}
+						>
+							Bestätigen
+						</button>
+					</div>
+				)}
+			</div>
 		</>
 	);
 };

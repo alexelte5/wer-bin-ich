@@ -12,7 +12,7 @@ type ClientPhase = "login" | "lobby";
 type ServerPhase = "assigning" | "game" | "end";
 
 // Socket verbinden
-const socket: Socket = io("https://whoami.kysfrfr.de/server");
+const socket: Socket = io("http://192.168.0.118:5004");
 
 function App() {
 	const [clientPhase, setClientPhase] = useState<ClientPhase>("login");
@@ -110,7 +110,7 @@ function App() {
 				/>
 			)}
 
-			{serverPhase === "end" && <End toLobby={toLobby} />}
+			{serverPhase === "end" && <End toLobby={toLobby} players={players}/>}
 		</div>
 	);
 }
