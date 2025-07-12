@@ -164,6 +164,7 @@ button.disabled:hover {
 }
 
 .waiting {
+  text-align: center;
   color: var(--text-muted);
   margin-bottom: -1em;
 }

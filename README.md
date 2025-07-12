@@ -28,9 +28,7 @@ Assign-Words abbrechen/Wort-ändern
 Timer im Endscreen einfügen
 
 styling:
-    Gamge-Page fehlt komplett
     Settings
-    Endscreen
 
 bugs: 
     wenn sich einer anmeldet, werden die inputs bei allen anderen gecleared
