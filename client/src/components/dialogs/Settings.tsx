@@ -11,14 +11,14 @@ const Settings: React.FC<SettingsProps> = ({ onClose, signout, toggled, setToggl
 
   return (
     <>
-      <div className="upper-wrapper">
-        <h2 className='header'>Einstellungen</h2>
+      <div className="settings-upper-wrapper">
+        <h2>Einstellungen</h2>
         <button onClick={onClose} className='icon-button'>❌</button>
       </div>
       <div className="game-settings">
-        <h3 className='subheader'>Spiel Einstellungen</h3>
+        <h3 className='sub-header'>Spiel Einstellungen</h3>
         <div className="slider">
-          <span>{toggled ? 'Zufällig' : 'Benutzerdefiniert'}</span>
+          <span className='sub-header'>{toggled ? 'Zufällig' : 'Benutzerdefiniert'}</span>
           <button className={`toggle-btn ${toggled ? 'toggled' : ''}`} onClick={() => {
             setToggled(!toggled);
           }}>
@@ -27,7 +27,7 @@ const Settings: React.FC<SettingsProps> = ({ onClose, signout, toggled, setToggl
         </div>
 
       </div>
-      <button onClick={signout}>Abmelden</button>
+      <button onClick={signout} className='signout'>Abmelden</button>
     </>
   )
 }
